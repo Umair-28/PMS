@@ -3,58 +3,72 @@ function showContent(content) {
     var tasksContent; // Declaring tasksContent variable outside switch statement
     var newUrl = '/';
     switch (content) {
-        case 'home':
-            newUrl += 'home';
-            var homeContent = `
-  <div class="greetings">
-    <h1>Greetings, ${userName}</h1>
-  </div>
-  <div class="agenda">
-    <h3>Agenda for Today</h3>
+
+    case 'home':
+        newUrl += 'home';
+        var homeContent = `
+<div class="welcome-section">
+    <h1>Welcome, ${userName}!</h1>
+    <p>Here's an overview of your day:</p>
+</div>
+<div class="agenda">
+    <h2>Agenda for Today</h2>
     <ul>
-      <li>Meeting with stakeholders at 10:00 AM</li>
-      <li>Review project progress at 2:00 PM</li>
-      <li>Follow up with clients at 4:00 PM</li>
+        <li>
+            <span class="time">10:00 AM</span>
+            <span class="event">Meeting with stakeholders</span>
+        </li>
+        <li>
+            <span class="time">2:00 PM</span>
+            <span class="event">Review project progress</span>
+        </li>
+        <li>
+            <span class="time">4:00 PM</span>
+            <span class="event">Follow up with clients</span>
+        </li>
     </ul>
-  </div>
+</div>
+
+<div class="statistics-section">
+    <h2>Statistics</h2>
+    <div class="statistics-container">
+        <!-- Statistics charts/graphs will be dynamically added here -->
+    </div>
+</div>
 `;
-            contentDiv.innerHTML = homeContent;
-            break;
+        contentDiv.innerHTML = homeContent;
+        break;
 
-
-
-        case 'tasks':
-            newUrl += 'tasks';
-            // Fetch tasks data from the server
-            fetch('/tasks')
+            case 'projects':
+                fetch('/projects')
                 .then(response => response.json())
-                .then(tasks => {
+                .then(projects => {
                     // Check if tasks array is empty
-                    if (tasks.length === 0) {
-                        contentDiv.innerHTML = '<p style="text-align:center">No tasks available.</p>';
+                    if (projects.length === 0) {
+                        contentDiv.innerHTML = '<p style="text-align:center">No Projects Yet...</p>';
                     } else {
                         // Build HTML for table header
-                        var tableHTML = '<h2>Tasks</h2><table>';
+                        var tableHTML = '<h2>Projects</h2><table>';
 
                         tableHTML +=
-                            '<tr><th>Description</th><th>Assignee</th><th>Assigned By</th><th>Priority</th><th>Status</th><th>Due Date</th><th>Action</th></tr>';
+                            '<tr><th>Name</th><th>Description</th><th>Project Leader</th><th>Created By</th><th>Status</th><th>Priority</th><th>Start Date</th><th>Due Date</th><th>Action</th></tr>';
 
                         // Iterate over tasks and build table rows
-                        tasks.forEach(task => {
+                        projects.forEach(project => {
                             tableHTML += '<tr>' +
-                                `<td>${task.description}</td>` +
-                                `<td>${task.assignee}</td>` +
-                                `<td>${task.assigned_by}</td>` +
-                                `<td>${task.priority}</td>` +
-                                `<td>${task.status}</td>` +
-                                `<td>${task.due_date}</td>` +
+                                `<td>${project.name}</td>` +
+                                `<td>${project.description}</td>` +
+                                `<td>${project.project_leader}</td>` +
+                                `<td>${project.created_by}</td>` +
+                                `<td>${project.status}</td>` +
+                                `<td>${project.priority}</td>` +
+                                `<td>${project.start_date}</td>` +
+                                `<td>${project.end_date}</td>` +
                                 '<td>';
 
-                            // Check if the user is admin or leader
-                            if (roleName === 'admin' || roleName === 'project-leader') {
-                                // Display the Delete button
-                                tableHTML += `<button onclick="deleteTask(${task.id})" style="background-color:red; margin-right:4px;">Delete</button>`;
-                            }
+
+                                tableHTML += `<button onclick="deleteProject(${project.id})" style="background-color:red; margin-right:4px;">Delete</button>`;
+                            
 
                             // Display the Update button
 
@@ -68,8 +82,70 @@ function showContent(content) {
                     }
                 })
                 .catch(error => console.error('Error fetching tasks:', error));
+                break;
 
-            break;
+
+
+                case 'tasks':
+                    newUrl += 'tasks';
+                    // Fetch tasks data from the server
+                    fetch('/tasks')
+                        .then(response => response.json())
+                        .then(tasks => {
+                            // Check if tasks array is empty
+                            if (tasks.length === 0) {
+                                contentDiv.innerHTML = '<p style="text-align:center">No tasks available.</p>';
+                            } else {
+                                // Build HTML for table header
+                                var tableHTML = '<h2>Tasks</h2><table>';
+                
+                                // Initialize table header HTML
+                                var tableHeaderHTML = '<tr><th>Description</th><th>Assignee</th><th>Assigned By</th><th>Priority</th><th>Status</th><th>Due Date</th>';
+                
+                                // Check if the user is admin or leader
+                                if (roleName === 'admin' || roleName === 'project-leader') {
+                                    // Display the "Action" column heading
+                                    tableHeaderHTML += '<th>Action</th>';
+                                }
+                
+                                // Close the table row
+                                tableHeaderHTML += '</tr>';
+                
+                                // Add table header HTML to tableHTML
+                                tableHTML += tableHeaderHTML;
+                
+                                // Iterate over tasks and build table rows
+                                tasks.forEach(task => {
+                                    // Start building table row HTML
+                                    tableHTML += '<tr>' +
+                                        `<td>${task.description}</td>` +
+                                        `<td>${task.assignee}</td>` +
+                                        `<td>${task.assigned_by}</td>` +
+                                        `<td>${task.priority}</td>` +
+                                        `<td>${task.status}</td>` +
+                                        `<td>${task.due_date}</td>`;
+                
+                                    // Check if the user is admin or leader
+                                    if (roleName === 'admin' || roleName === 'project-leader') {
+                                        // Display the Delete button
+                                        tableHTML += `<td><button onclick="deleteTask(${task.id})" style="background-color:red; margin-right:4px;">Delete</button></td>`;
+                                    }
+                
+                                    // Close the table row
+                                    tableHTML += '</tr>';
+                                });
+                
+                                // Close the table
+                                tableHTML += '</table>';
+                
+                                // Display tasks table in contentDiv
+                                contentDiv.innerHTML = tableHTML;
+                            }
+                        })
+                        .catch(error => console.error('Error fetching tasks:', error));
+                
+                    break;
+                
 
 
 
@@ -191,43 +267,43 @@ document.getElementById('taskForm').addEventListener('submit', function (event) 
 });
 
 // Function to update the task list
-function updateTaskList(tasks) {
-    var contentDiv = document.getElementById('content');
-    if (tasks.length === 0) {
-        contentDiv.innerHTML = '<p style="text-align:center">No tasks available.</p>';
-    } else {
-        // Build HTML for table header
-        var tableHTML = '<h2>Tasks</h2><table>';
-        tableHTML +=
-            '<tr><th>Description</th><th>Assignee</th><th>Assigned By</th><th>Priority</th><th>Due Date</th><th>Action</th></tr>';
+// function updateTaskList(tasks) {
+//     var contentDiv = document.getElementById('content');
+//     if (tasks.length === 0) {
+//         contentDiv.innerHTML = '<p style="text-align:center">No tasks available.</p>';
+//     } else {
+//         // Build HTML for table header
+//         var tableHTML = '<h2>Tasks</h2><table>';
+//         tableHTML +=
+//             '<tr><th>Description</th><th>Assignee</th><th>Assigned By</th><th>Priority</th><th>Due Date</th><th>Action</th></tr>';
 
-        // Iterate over tasks and build table rows
-        tasks.forEach(task => {
-            tableHTML += '<tr>' +
-                `<td>${task.description}</td>` +
-                `<td>${task.assignee}</td>` +
-                `<td>${task.assigned_by}</td>` +
-                `<td>${task.priority}</td>` +
-                `<td>${task.due_date}</td>` +
-                '<td>';
+//         // Iterate over tasks and build table rows
+//         tasks.forEach(task => {
+//             tableHTML += '<tr>' +
+//                 `<td>${task.description}</td>` +
+//                 `<td>${task.assignee}</td>` +
+//                 `<td>${task.assigned_by}</td>` +
+//                 `<td>${task.priority}</td>` +
+//                 `<td>${task.due_date}</td>` +
+//                 '<td>';
 
-            // Check if the user is admin or leader
-            if (roleName === 'admin' || roleName === 'leader') {
-                // Display the Delete button
-                tableHTML += `<button style="background-color:red">Delete</button>`;
-            }
+//             // Check if the user is admin or leader
+//             if (roleName === 'admin' || roleName === 'leader') {
+//                 // Display the Delete button
+//                 tableHTML += `<button style="background-color:red">Delete</button>`;
+//             }
 
-            // Display the Update button
+//             // Display the Update button
 
-        });
+//         });
 
-        // Close the table
-        tableHTML += '</table>';
+//         // Close the table
+//         tableHTML += '</table>';
 
-        // Display tasks table in contentDiv
-        contentDiv.innerHTML = tableHTML;
-    }
-}
+//         // Display tasks table in contentDiv
+//         contentDiv.innerHTML = tableHTML;
+//     }
+// }
 
 // logout the current user
 function logout() {
@@ -334,5 +410,95 @@ function updateStatus(taskId, status) {
     // Here you can send an AJAX request to update the status of the task in your backend/database
     console.log("Task ID:", taskId, "Status:", status);
 }
+
+// Managing the project
+// Function to open the modal
+function openProjectModal() {
+    document.getElementById('projectModal').style.display = 'block';
+}
+
+// Function to close the modal
+function closeProjectModal() {
+    document.getElementById('projectModal').style.display = 'none';
+}
+
+
+//PROJECT CRUD
+
+
+// creating a  task
+document.getElementById('projectForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    // Construct project object from form data
+    var project = {
+        name: document.getElementById('projectName').value,
+        description: document.getElementById('projectDescription').value,
+        project_leader: document.getElementById('projectLeader').value,
+        status: document.getElementById('Projectstatus').value,
+        priority: document.getElementById('Projectpriority').value,
+        start_date: document.getElementById('startDate').value,
+        end_date: document.getElementById('endDate').value
+    };
+
+    // Retrieve CSRF token from meta tag
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Send POST request to create-project endpoint
+    fetch('/create-project', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(project)
+    })
+    .then(response => {
+        if (response.ok) {
+            // Project created successfully, close modal
+            closeProjectModal();
+            showContent('projects');
+            // Refresh project list or perform other actions as needed
+        } else {
+            throw new Error('Failed to create project');
+        }
+    })
+    .catch(error => {
+        console.error('Error creating project:', error);
+        // Handle error, such as displaying an error message to the user
+    });
+});
+
+
+// Delete a Project
+
+function deleteProject(projectId) {
+    var confirmation = confirm("Are you sure you want to delete this Project?");
+    if (confirmation) {
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Send DELETE request to delete-task endpoint
+        fetch(`http://127.0.0.1:8000/project/${projectId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Task deleted successfully, reload the task section
+                    showContent('projects');
+                } else {
+                    throw new Error('Failed to delete project');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting projct:', error);
+                // Handle error, such as displaying an error message to the user
+            });
+    }
+}
+
+
 
 

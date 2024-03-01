@@ -154,14 +154,14 @@ body {
 
 .create-task-button {
     position: absolute;
-    top: 20px;
+    top: 40px;
     /* Adjust as needed */
     right: 30px;
     /* Adjust as needed */
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #15477b;
     color: #fff;
-    border: none;
+    border-bottom: 1px solid black;
     border-radius: 4px;
     cursor: pointer;
 }
@@ -218,3 +218,131 @@ background-color: #0056b3;
     border: 1px solid #999;
     cursor: pointer;
   }
+
+  /* CSS for Create Project Modal */
+
+ /* Form styles */
+#projectForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#projectForm label {
+    margin-bottom: 10px;
+}
+
+#projectForm input,
+#projectForm select {
+    margin-bottom: 15px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#projectForm button[type="submit"] {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#projectForm button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+#projectForm button[type="submit"]:focus {
+    outline: none;
+} 
+
+/* CSS FOR HOME SECTION */
+
+
+    /* Global styles */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    /* Container styles */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Welcome section styles */
+    .welcome-section {
+        background-color: #719aba;
+        color: #fff;
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* Agenda styles */
+    .agenda {
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .agenda ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .agenda li {
+        margin-bottom: 10px;
+    }
+
+    .agenda .time {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    /* Tasks section styles */
+    .tasks-section {
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .tasks-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .task-card {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .view-tasks-button {
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .view-tasks-button:hover {
+        background-color: #2980b9;
+    }
+
+    /* Statistics section styles */
+    .statistics-section {
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* Add additional styles as needed */
+
