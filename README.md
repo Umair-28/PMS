@@ -43,5 +43,5 @@ npm install
 ## Usage
 
 - Register an account or use the default admin account created during seeding.
-- Route to access login and signup page `localhost://8000/login` AND `localhost://8000/signup`
+- Route to access login and signup page `http://localhost:8000/login` AND `http://localhost:8000/signup`
 - Log in and start managing projects, tasks, and team members. 
