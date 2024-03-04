@@ -148,7 +148,7 @@ function showContent(content) {
             break;
 
 
-            case 'users':
+        case 'users':
             newUrl += 'users';
             // Fetch users data from the server
             fetch('/users')
@@ -186,15 +186,15 @@ function showContent(content) {
             break;
 
 
-            case 'boards':
+        case 'boards':
 
-                newUrl += 'boards';
-                container.style.display = 'block';
-                var boardContent = `
+            newUrl += 'boards';
+            container.style.display = 'block';
+            var boardContent = `
                             <h1>Task Board</h1>
                 `;
-                contentDiv.innerHTML = boardContent;
-                break;
+            contentDiv.innerHTML = boardContent;
+            break;
 
 
         default:
@@ -475,7 +475,7 @@ function drop(event, status) {
     var taskElement = document.getElementById(taskId);
     var newColumn = event.target.closest('.kanban-block');
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    
+
     if (newColumn) {
         // Remove the task element from its original column
         taskElement.remove();
@@ -494,15 +494,15 @@ function drop(event, status) {
                 status: status
             })
         })
-        .then(response => {
-            if (response.ok) {
-                console.log('Task status updated successfully');
-                // Refresh the board or update UI as needed
-            } else {
-                console.error('Failed to update task status');
-            }
-        })
-        .catch(error => console.error('Error updating task status:', error));
+            .then(response => {
+                if (response.ok) {
+                    console.log('Task status updated successfully');
+                    // Refresh the board or update UI as needed
+                } else {
+                    console.error('Failed to update task status');
+                }
+            })
+            .catch(error => console.error('Error updating task status:', error));
     }
 }
 

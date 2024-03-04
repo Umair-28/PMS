@@ -15,8 +15,8 @@ class TaskController extends Controller
     public function getAllTasks(Request $request)
     {
         $user = $request->user();
-        if($user->hasRole("developer")){
-            $tasks = DB::table('tasks')->where('assignee',$user->name)->get();
+        if ($user->hasRole("developer")) {
+            $tasks = DB::table('tasks')->where('assignee', $user->name)->get();
             return response()->json($tasks);
         }
 
@@ -29,23 +29,23 @@ class TaskController extends Controller
         $user = $request->user();
         //dd($user->name);
 
-        if($user->hasRole('admin') ||  $user->hasRole('project-leader')){
+        if ($user->hasRole('admin') ||  $user->hasRole('project-leader')) {
             $validator = Validator::make($request->all(), [
                 'description' => ['required', 'string', 'max:255'],
                 'assignee' => ['required', 'string'],
-    
+
                 'status' => ['nullable', 'string'],
                 'priority' => ['nullable', 'string'],
                 'due_date' => ['nullable', 'date'], // Add validation for 'due_date'
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json([
                     'error' => 'Validation failed',
                     'messages' => $validator->errors(),
                 ], 422); // Return 422 Unprocessable Entity status code for validation failure
             }
-    
+
             // Create a new task instance
             $task = Task::create([
                 'description' => $request->description,
@@ -55,27 +55,25 @@ class TaskController extends Controller
                 'priority' => $request->priority ?? 'Normal',
                 'due_date' => $request->due_date ?? now(),
             ]);
-    
+
             // Return a response with the newly created task
             return response()->json([
                 'message' => 'Task Successfully Created',
                 'task' => $task,
             ]);
         }
-
-       
     }
 
     public function update(Request $request, $id)
-{
- 
-    
-    // Validate input based on user role
-  
+    {
+
+
+        // Validate input based on user role
+
         $validatedData = $request->validate([
             'status' => ['required', 'string'], // Only allow updating status for developers
         ]);
- 
+
         // Admin and leader roles can update all fields
         // $validatedData = $request->validate([
         //     'description' => ['required', 'string', 'max:255'],
@@ -84,34 +82,33 @@ class TaskController extends Controller
         //     'priority' => ['required', 'string'],
         //     'due_date' => ['required', 'date'],
         // ]);
-    
-
-    // Update the task
-    $task = Task::findOrFail($id);
-    $task->update($validatedData);
-
-    // Return a success response
-    return response()->json(['message' => 'Task updated successfully']);
-}
 
 
+        // Update the task
+        $task = Task::findOrFail($id);
+        $task->update($validatedData);
+
+        // Return a success response
+        return response()->json(['message' => 'Task updated successfully']);
+    }
 
 
-            public function delete($id)
-            {
-                try {
-                    // Find the task by ID
-                    $task = Task::findOrFail($id);
-                    
-                    // Delete the task
-                    $task->delete();
-                    
-                    // Return a success response
-                    return response()->json(['message' => 'Task deleted successfully']);
-                } catch (\Exception $e) {
-                    // Return an error response if the task was not found or if there was an error during deletion
-                    return response()->json(['error' => 'Failed to delete task'], 500);
-                }
-            }
-        
+
+
+    public function delete($id)
+    {
+        try {
+            // Find the task by ID
+            $task = Task::findOrFail($id);
+
+            // Delete the task
+            $task->delete();
+
+            // Return a success response
+            return response()->json(['message' => 'Task deleted successfully']);
+        } catch (\Exception $e) {
+            // Return an error response if the task was not found or if there was an error during deletion
+            return response()->json(['error' => 'Failed to delete task'], 500);
+        }
+    }
 }
