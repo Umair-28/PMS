@@ -4,43 +4,42 @@ function showContent(content) {
     var newUrl = '/';
     switch (content) {
 
-    case 'home':
-        newUrl += 'home';
-        var homeContent = `
-<div class="welcome-section">
-    <h1>Welcome, ${userName}!</h1>
-    <p>Here's an overview of your day:</p>
-</div>
-<div class="agenda">
-    <h2>Agenda for Today</h2>
-    <ul>
-        <li>
-            <span class="time">10:00 AM</span>
-            <span class="event">Meeting with stakeholders</span>
-        </li>
-        <li>
-            <span class="time">2:00 PM</span>
-            <span class="event">Review project progress</span>
-        </li>
-        <li>
-            <span class="time">4:00 PM</span>
-            <span class="event">Follow up with clients</span>
-        </li>
-    </ul>
-</div>
+        case 'home':
+            newUrl += 'home';
+            var homeContent = `
+                <div class="welcome-section">
+                    <h1>Welcome, ${userName}!</h1>
+                    <p>Here's an overview of your day:</p>
+                </div>
+                <div class="agenda">
+                    <h2>Agenda for Today</h2>
+                        <ul>
+                            <li>
+                            <span class="time">10:00 AM</span>
+                            <span class="event">Meeting with stakeholders</span>
+                            </li>
+                            <li>
+                            <span class="time">2:00 PM</span>
+                            <span class="event">Review project progress</span>
+                            </li>
+                            <li>
+                            <span class="time">4:00 PM</span>
+                            <span class="event">Follow up with clients</span>
+                            </li>
+                        </ul>
+                </div>
 
-<div class="statistics-section">
-    <h2>Statistics</h2>
-    <div class="statistics-container">
-        <!-- Statistics charts/graphs will be dynamically added here -->
-    </div>
-</div>
-`;
-        contentDiv.innerHTML = homeContent;
-        break;
+                <div class="statistics-section">
+                    <h2>Statistics</h2>
+                <div class="statistics-container">
+        
+            </div>
+        </div>`;
+            contentDiv.innerHTML = homeContent;
+            break;
 
-            case 'projects':
-                fetch('/projects')
+        case 'projects':
+            fetch('/projects')
                 .then(response => response.json())
                 .then(projects => {
                     // Check if tasks array is empty
@@ -67,8 +66,8 @@ function showContent(content) {
                                 '<td>';
 
 
-                                tableHTML += `<button onclick="deleteProject(${project.id})" style="background-color:red; margin-right:4px;">Delete</button>`;
-                            
+                            tableHTML += `<button onclick="deleteProject(${project.id})" style="background-color:red; margin-right:4px;">Delete</button>`;
+
 
                             // Display the Update button
 
@@ -82,76 +81,72 @@ function showContent(content) {
                     }
                 })
                 .catch(error => console.error('Error fetching tasks:', error));
-                break;
+            break;
 
 
 
-                case 'tasks':
-                    newUrl += 'tasks';
-                    // Fetch tasks data from the server
-                    fetch('/tasks')
-                        .then(response => response.json())
-                        .then(tasks => {
-                            // Check if tasks array is empty
-                            if (tasks.length === 0) {
-                                contentDiv.innerHTML = '<p style="text-align:center">No tasks available.</p>';
-                            } else {
-                                // Build HTML for table header
-                                var tableHTML = '<h2>Tasks</h2><table>';
-                
-                                // Initialize table header HTML
-                                var tableHeaderHTML = '<tr><th>Description</th><th>Assignee</th><th>Assigned By</th><th>Priority</th><th>Status</th><th>Due Date</th>';
-                
-                                // Check if the user is admin or leader
-                                if (roleName === 'admin' || roleName === 'project-leader') {
-                                    // Display the "Action" column heading
-                                    tableHeaderHTML += '<th>Action</th>';
-                                }
-                
-                                // Close the table row
-                                tableHeaderHTML += '</tr>';
-                
-                                // Add table header HTML to tableHTML
-                                tableHTML += tableHeaderHTML;
-                
-                                // Iterate over tasks and build table rows
-                                tasks.forEach(task => {
-                                    // Start building table row HTML
-                                    tableHTML += '<tr>' +
-                                        `<td>${task.description}</td>` +
-                                        `<td>${task.assignee}</td>` +
-                                        `<td>${task.assigned_by}</td>` +
-                                        `<td>${task.priority}</td>` +
-                                        `<td>${task.status}</td>` +
-                                        `<td>${task.due_date}</td>`;
-                
-                                    // Check if the user is admin or leader
-                                    if (roleName === 'admin' || roleName === 'project-leader') {
-                                        // Display the Delete button
-                                        tableHTML += `<td><button onclick="deleteTask(${task.id})" style="background-color:red; margin-right:4px;">Delete</button></td>`;
-                                    }
-                
-                                    // Close the table row
-                                    tableHTML += '</tr>';
-                                });
-                
-                                // Close the table
-                                tableHTML += '</table>';
-                
-                                // Display tasks table in contentDiv
-                                contentDiv.innerHTML = tableHTML;
+        case 'tasks':
+            newUrl += 'tasks';
+            // Fetch tasks data from the server
+            fetch('/tasks')
+                .then(response => response.json())
+                .then(tasks => {
+                    // Check if tasks array is empty
+                    if (tasks.length === 0) {
+                        contentDiv.innerHTML = '<p style="text-align:center">No tasks available.</p>';
+                    } else {
+                        // Build HTML for table header
+                        var tableHTML = '<h2>Tasks</h2><table>';
+
+                        // Initialize table header HTML
+                        var tableHeaderHTML = '<tr><th>Description</th><th>Assignee</th><th>Assigned By</th><th>Priority</th><th>Status</th><th>Due Date</th>';
+
+                        // Check if the user is admin or leader
+                        if (roleName === 'admin' || roleName === 'project-leader') {
+                            // Display the "Action" column heading
+                            tableHeaderHTML += '<th>Action</th>';
+                        }
+
+                        // Close the table row
+                        tableHeaderHTML += '</tr>';
+
+                        // Add table header HTML to tableHTML
+                        tableHTML += tableHeaderHTML;
+
+                        // Iterate over tasks and build table rows
+                        tasks.forEach(task => {
+                            // Start building table row HTML
+                            tableHTML += '<tr>' +
+                                `<td>${task.description}</td>` +
+                                `<td>${task.assignee}</td>` +
+                                `<td>${task.assigned_by}</td>` +
+                                `<td>${task.priority}</td>` +
+                                `<td>${task.status}</td>` +
+                                `<td>${task.due_date}</td>`;
+
+                            // Check if the user is admin or leader
+                            if (roleName === 'admin' || roleName === 'project-leader') {
+                                // Display the Delete button
+                                tableHTML += `<td><button onclick="deleteTask(${task.id})" style="background-color:red; margin-right:4px;">Delete</button></td>`;
                             }
-                        })
-                        .catch(error => console.error('Error fetching tasks:', error));
-                
-                    break;
-                
+
+                            // Close the table row
+                            tableHTML += '</tr>';
+                        });
+
+                        // Close the table
+                        tableHTML += '</table>';
+
+                        // Display tasks table in contentDiv
+                        contentDiv.innerHTML = tableHTML;
+                    }
+                })
+                .catch(error => console.error('Error fetching tasks:', error));
+
+            break;
 
 
-
-
-
-        case 'users':
+            case 'users':
             newUrl += 'users';
             // Fetch users data from the server
             fetch('/users')
@@ -172,9 +167,8 @@ function showContent(content) {
                               <td>${user.id}</td>           
                               <td>${user.name}</td>
                               <td>${user.email}</td>
-                              <td><button onclick="updateTask(${user.id})">Update</button>
+                              <td>
                               <button onclick="deleteUser(${user.id})" style="background-color:red">Delete</button>
-
                               </td>
                             </tr>`;
                         });
@@ -188,7 +182,33 @@ function showContent(content) {
                 })
                 .catch(error => console.error('Error fetching users:', error));
             break;
+
+
+            case 'boards':
+                newUrl += 'boards';
+                var board = document.querySelector('.board');
+                if (board) {
+                    board.style.display = 'block';
+                }
+                // Use getElementsByClassName which returns a collection of elements
+                var buttons = document.getElementsByClassName("create-task-button");
+                // Loop through each button in the collection
+                for (var i = 0; i < buttons.length; i++) {
+                    // Set the display property for each button
+                    buttons[i].style.display = 'none';
+                }
+                var boardContent = `
+                            <h1>Hello World</h1>
+                `;
+                contentDiv.innerHTML = boardContent;
+                break;
+
+
         default:
+            var board = document.querySelector('.board');
+            if (board) {
+                board.style.display = 'none'; // Hide the board when navigating away from the "Boards" section
+            }
             var defaultContent = '<h2>Error: Invalid content type</h2>';
             contentDiv.innerHTML = defaultContent;
     }
@@ -213,6 +233,17 @@ function closeModal() {
     var modal = document.getElementById('myModal');
     modal.style.display = 'none';
 }
+
+function openProjectModal() {
+    var modal = document.getElementById("projectModal");
+    modal.style.display = "block";
+}
+
+function closeProjectModal() {
+    var modal = document.getElementById("projectModal");
+    modal.style.display = "none";
+}
+
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
@@ -266,44 +297,7 @@ document.getElementById('taskForm').addEventListener('submit', function (event) 
         });
 });
 
-// Function to update the task list
-// function updateTaskList(tasks) {
-//     var contentDiv = document.getElementById('content');
-//     if (tasks.length === 0) {
-//         contentDiv.innerHTML = '<p style="text-align:center">No tasks available.</p>';
-//     } else {
-//         // Build HTML for table header
-//         var tableHTML = '<h2>Tasks</h2><table>';
-//         tableHTML +=
-//             '<tr><th>Description</th><th>Assignee</th><th>Assigned By</th><th>Priority</th><th>Due Date</th><th>Action</th></tr>';
 
-//         // Iterate over tasks and build table rows
-//         tasks.forEach(task => {
-//             tableHTML += '<tr>' +
-//                 `<td>${task.description}</td>` +
-//                 `<td>${task.assignee}</td>` +
-//                 `<td>${task.assigned_by}</td>` +
-//                 `<td>${task.priority}</td>` +
-//                 `<td>${task.due_date}</td>` +
-//                 '<td>';
-
-//             // Check if the user is admin or leader
-//             if (roleName === 'admin' || roleName === 'leader') {
-//                 // Display the Delete button
-//                 tableHTML += `<button style="background-color:red">Delete</button>`;
-//             }
-
-//             // Display the Update button
-
-//         });
-
-//         // Close the table
-//         tableHTML += '</table>';
-
-//         // Display tasks table in contentDiv
-//         contentDiv.innerHTML = tableHTML;
-//     }
-// }
 
 // logout the current user
 function logout() {
@@ -384,50 +378,13 @@ function deleteUser(userId) {
     }
 }
 
-// Dragging the Tasks
-
-
-
-
-function allowDrop(event) {
-    event.preventDefault();
-}
-
-function drag(event) {
-    event.dataTransfer.setData("text", event.target.id);
-}
-
-function drop(event, status) {
-    event.preventDefault();
-    var taskId = event.dataTransfer.getData("text");
-    var task = document.getElementById(taskId);
-    var column = event.target.closest('.column');
-    column.appendChild(task);
-    updateStatus(taskId, status);
-}
-
-function updateStatus(taskId, status) {
-    // Here you can send an AJAX request to update the status of the task in your backend/database
-    console.log("Task ID:", taskId, "Status:", status);
-}
-
-// Managing the project
-// Function to open the modal
-function openProjectModal() {
-    document.getElementById('projectModal').style.display = 'block';
-}
-
-// Function to close the modal
-function closeProjectModal() {
-    document.getElementById('projectModal').style.display = 'none';
-}
 
 
 //PROJECT CRUD
 
 
 // creating a  task
-document.getElementById('projectForm').addEventListener('submit', function(event) {
+document.getElementById('projectForm').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent default form submission
 
     // Construct project object from form data
@@ -453,20 +410,20 @@ document.getElementById('projectForm').addEventListener('submit', function(event
         },
         body: JSON.stringify(project)
     })
-    .then(response => {
-        if (response.ok) {
-            // Project created successfully, close modal
-            closeProjectModal();
-            showContent('projects');
-            // Refresh project list or perform other actions as needed
-        } else {
-            throw new Error('Failed to create project');
-        }
-    })
-    .catch(error => {
-        console.error('Error creating project:', error);
-        // Handle error, such as displaying an error message to the user
-    });
+        .then(response => {
+            if (response.ok) {
+                // Project created successfully, close modal
+                closeProjectModal();
+                showContent('projects');
+                // Refresh project list or perform other actions as needed
+            } else {
+                throw new Error('Failed to create project');
+            }
+        })
+        .catch(error => {
+            console.error('Error creating project:', error);
+            // Handle error, such as displaying an error message to the user
+        });
 });
 
 

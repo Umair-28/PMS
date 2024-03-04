@@ -49,7 +49,3 @@ Route::delete('/project/{id}', [ProjectController::class, 'deleteProject']);
 
 Route::get('/users', [UserController::class, 'showUsers']);
 Route::delete('/user/{id}', [UserController::class, 'delete']);
-
-Route::get('/task-dashboard', function(){
-    return view('task-dashboard');
-});
