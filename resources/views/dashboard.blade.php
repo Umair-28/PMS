@@ -38,6 +38,7 @@
             <a href="#" onclick="showContent('projects')"><i class="fas fa-tasks"></i> Projects</a>
             @endif
         <a href="#" onclick="showContent('tasks')"><i class="fas fa-tasks"></i> Tasks</a>
+        <a href="#" onclick="showContent('boards')"><i class="fas fa-tasks"></i> Tasks-Board</a>
         @if ($role_name === 'admin')
             <a href="#" onclick="showContent('users')"><i class="fas fa-users"></i> Users</a>
             <a href="#" onclick="showContent('projects')"><i class="fas fa-tasks"></i> Projects</a>
@@ -138,6 +139,49 @@
                 <button type="submit">Create Project</button>
             </form>
         </div>
+    </div>
+
+
+    <div class="kanban-container">
+
+        <div class="kanban-board">
+            <div class="kanban-block" id="todo" ondrop="drop(event, 'Back Log')" ondragover="allowDrop(event)">
+                <h2 style="text-align: center; margin-bottom:10px">Back Log</h2>
+                @foreach ($tasks->where('status', 'Back Log') as $task)
+                    <div class="task" id="{{ $task->id }}" draggable="true" ondragstart="drag(event)">
+                        <span>{{ $task->description }}</span>
+                    </div>
+                @endforeach
+            </div>
+        
+            <div class="kanban-block" id="inprogress" ondrop="drop(event, 'In Progress')" ondragover="allowDrop(event)">
+                <h2 style="text-align: center; margin-bottom:10px">In Progress</h2>
+                @foreach ($tasks->where('status', 'In Progress') as $task)
+                    <div class="task" id="{{ $task->id }}" draggable="true" ondragstart="drag(event)">
+                        <span>{{ $task->description }}</span>
+                    </div>
+                @endforeach
+            </div>
+        
+            <div class="kanban-block" id="done" ondrop="drop(event, 'In Review')" ondragover="allowDrop(event)">
+                <h2 style="text-align: center; margin-bottom:10px">In Review</h2>
+                @foreach ($tasks->where('status', 'In Review') as $task)
+                    <div class="task" id="{{ $task->id }}" draggable="true" ondragstart="drag(event)">
+                        <span>{{ $task->description }}</span>
+                    </div>
+                @endforeach
+            </div>
+        
+            <div class="kanban-block" id="closed" ondrop="drop(event, 'Closed')" ondragover="allowDrop(event)">
+                <h2 style="text-align: center; margin-bottom:10px">Closed</h2>
+                @foreach ($tasks->where('status', 'Closed') as $task)
+                    <div class="task" id="{{ $task->id }}" draggable="true" ondragstart="drag(event)">
+                        <span>{{ $task->description }}</span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        
     </div>
 
 
