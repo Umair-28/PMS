@@ -46,6 +46,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
         $role_name="";
+        $tasks = "";
 
         if (Auth::attempt($credentials)) {
             // Authentication passed
@@ -57,10 +58,14 @@ class AuthController extends Controller
 
   
                     $role_name = DB::table('roles')->where('id', $role_id)->value('name');
-                $tasks  = Task::all(); 
-        
-        
 
+                    $user = $request->user();
+                    if($user->hasRole("developer")){
+                        $tasks = DB::table('tasks')->where('assignee',$user->name)->get();
+                        
+                    }else{
+                         $tasks = DB::table('tasks')->get();
+                    }
             return view('dashboard',compact('user', 'role_name', 'user_name', 'tasks'));
         }
 

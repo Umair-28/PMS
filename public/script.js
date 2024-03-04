@@ -1,6 +1,8 @@
 function showContent(content) {
     var contentDiv = document.getElementById('content');
     var tasksContent; // Declaring tasksContent variable outside switch statement
+    var container = document.querySelector('.kanban-container');
+    container.style.display = 'none';
     var newUrl = '/';
     switch (content) {
 
@@ -185,30 +187,19 @@ function showContent(content) {
 
 
             case 'boards':
+
                 newUrl += 'boards';
-                var board = document.querySelector('.board');
-                if (board) {
-                    board.style.display = 'block';
-                }
-                // Use getElementsByClassName which returns a collection of elements
-                var buttons = document.getElementsByClassName("create-task-button");
-                // Loop through each button in the collection
-                for (var i = 0; i < buttons.length; i++) {
-                    // Set the display property for each button
-                    buttons[i].style.display = 'none';
-                }
+                container.style.display = 'block';
                 var boardContent = `
-                            <h1>Hello World</h1>
+                            <h1>Task Board</h1>
                 `;
                 contentDiv.innerHTML = boardContent;
                 break;
 
 
         default:
-            var board = document.querySelector('.board');
-            if (board) {
-                board.style.display = 'none'; // Hide the board when navigating away from the "Boards" section
-            }
+            var container = document.querySelector('.kanban-container');
+            container.style.display = 'none';
             var defaultContent = '<h2>Error: Invalid content type</h2>';
             contentDiv.innerHTML = defaultContent;
     }
@@ -225,6 +216,11 @@ window.onload = function () {
 // Function to open the modal
 function openModal() {
     var modal = document.getElementById('myModal');
+    modal.style.display = 'block';
+}
+
+function openBoard() {
+    var modal = document.getElementsByClassName('kanban-container');
     modal.style.display = 'block';
 }
 
@@ -455,6 +451,61 @@ function deleteProject(projectId) {
             });
     }
 }
+
+
+// KANBAN BOARD
+
+function drag(ev) {
+    ev.dataTransfer.setData("taskId", ev.target.id);
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("taskId");
+    ev.target.appendChild(document.getElementById(data));
+}
+
+function drop(event, status) {
+    event.preventDefault();
+    var taskId = event.dataTransfer.getData("taskId");
+    var taskElement = document.getElementById(taskId);
+    var newColumn = event.target.closest('.kanban-block');
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    if (newColumn) {
+        // Remove the task element from its original column
+        taskElement.remove();
+
+        // Append the task element to the new column
+        newColumn.appendChild(taskElement);
+
+        // Send HTTP request to update task status in the backend
+        fetch(`/tasks/${taskId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken // Include CSRF token if needed
+            },
+            body: JSON.stringify({
+                status: status
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Task status updated successfully');
+                // Refresh the board or update UI as needed
+            } else {
+                console.error('Failed to update task status');
+            }
+        })
+        .catch(error => console.error('Error updating task status:', error));
+    }
+}
+
 
 
 

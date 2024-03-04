@@ -68,23 +68,23 @@ class TaskController extends Controller
 
     public function update(Request $request, $id)
 {
-    $user = $request->user();
+ 
     
     // Validate input based on user role
-    if ($user->role === 'develop') {
+  
         $validatedData = $request->validate([
             'status' => ['required', 'string'], // Only allow updating status for developers
         ]);
-    } else {
+ 
         // Admin and leader roles can update all fields
-        $validatedData = $request->validate([
-            'description' => ['required', 'string', 'max:255'],
-            'assignee' => ['required', 'string'],
-            'status' => ['required', 'string'],
-            'priority' => ['required', 'string'],
-            'due_date' => ['required', 'date'],
-        ]);
-    }
+        // $validatedData = $request->validate([
+        //     'description' => ['required', 'string', 'max:255'],
+        //     'assignee' => ['required', 'string'],
+        //     'status' => ['required', 'string'],
+        //     'priority' => ['required', 'string'],
+        //     'due_date' => ['required', 'date'],
+        // ]);
+    
 
     // Update the task
     $task = Task::findOrFail($id);
